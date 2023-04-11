@@ -1,41 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:travo_app_source/core/constants/color_palatte.dart';
+import 'package:travo_app_source/core/helpers/local_storage_helper.dart';
+import 'package:travo_app_source/representation/screen/slpash_screen.dart';
+import 'package:travo_app_source/routes.dart';
 
-void main() => runApp(MyApp());
+import 'core/helpers/size_config.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  // This widget is the root of your application.
+void main() async {
+  await Hive.initFlutter();
+  await LocalStorageHelper.initLocalStorageHelper();
+  runApp(const TravoApp());
+}
+
+class TravoApp extends StatelessWidget {
+  const TravoApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Application name
-      title: 'Flutter Hello World',
-      // Application theme data, you can set the colors for the application as
-      // you want
+      title: 'Travo App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: ColorPalette.primaryColor,
+        scaffoldBackgroundColor: ColorPalette.backgroundScaffoldColor,
+        backgroundColor: ColorPalette.backgroundScaffoldColor,
       ),
-      // A widget which will be started on application startup
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-  const MyHomePage({super.key, required this.title});  
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // The title text which will be shown on the action bar
-        title: Text(title),
-      ),
-      body: Center(
-        child: Text(
-          'Hello, World!',
-        ),
+      routes: routes,
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: generateRoutes,
+      home: Builder(
+        builder: (context) {
+          SizeConfig.init(context);
+          return SplashScreen();
+        },
       ),
     );
   }
